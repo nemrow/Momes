@@ -1,0 +1,13 @@
+<div class="container">
+	<h1 class="stats_header">Your Hookup Stats</h1>
+	<h3 class="stats_stats">You have hooked up with <%= @chick_count %> of your facebook friends.</h3>
+	<% @chicks.each do |chick| %>
+		<div class="stats_chick_container">
+			<img src="<%= chick.img_url %>?width=320&height=320">
+			<div class="chick_info">
+				<div class="overlay"></div>
+				<p class="chick_name"><%= chick.full_name %></p>
+			</div>
+		</div>
+	<% end %>
+</div>

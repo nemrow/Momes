@@ -1,0 +1,53 @@
+<div class="container">
+	<h3 class="have_you">Have you hooked up with...</h3>
+	<div class="friend_display_container">
+		<img class="thumbs_picker thumbs_up hooked_up" src="img/thumbs_up">
+		<img class="thumbs_picker thumbs_down" src="img/thumbs_down">
+		<div class="friend_window">
+			<% @friends.each do |friend| %>
+			<div class="indi_friend_shell" data-friend_info="{:first_name => '<%= friend.first_name %>', :last_name => '<%= friend.last_name %>', :gender => '<%= friend.gender %>', :fb_id => '<%= friend.fb_id %>'}">
+				<img class="friend_actual_image" src="<%= friend.img_url %>?width=300&height=400">
+				<h2 class="friend_name"><%= friend.first_name %></h2>
+			</div>
+			<% end %>
+		</div>
+		<textarea class="deets" placeholder="Deets?"></textarea>
+	</div>
+</div>
+<% @friends.each do |f| %>
+<p><%=f.first_name %></p>
+<% end %>
+<script type="text/javascript">
+	$(document).ready(function(){
+		var current_friend_slide = 0
+		$('.indi_friend_shell:first').css('left',0).addClass('open_slide');
+		$('.hooked_up').click(function(event){
+			event.preventDefault()
+			$.post('/answer', {
+				friend_info: $('.open_slide').data('friend_info')
+			 }).done(function(data){
+			 	// $('.friend_window').append(data)
+			 }).fail(function(data){
+			 	alert('failed')
+			 })
+			 next_slide()
+		})
+
+		$('.thumbs_down').click(function(){
+			$.post('/no_hookup')
+			next_slide()
+		})
+
+		function next_slide(){
+			$('.open_slide').animate({
+				'left' : '-300px'
+			},1000, function(){
+				$(this).remove();
+			})
+			$('.open_slide').next().addClass('open_slide').animate({
+				'left' : '0px'
+			},1000)
+		}
+
+	})
+</script>
