@@ -7,15 +7,16 @@
 			<script type="text/javascript">
 				var facebook_id_vars = []
 			</script>
-			<% @friends.each do |friend| %>
-				<%= erb :_friend_slide, :locals => {:friend => friend} %>
+			<% @friends.each_with_index do |friend, index| %>
+				<%= erb :_friend_slide, :locals => {:friend => friend, :index => index} %>
 			<% end %>
 		</div>
 	</div>
 </div>
 <script type="text/javascript">
 	$(document).ready(function(){
-		var current_friend_slide = 0
+		var current_friend_slide = 0;
+		var batch_end_index = <%= @batch_end_index %>;
 		$('.indi_friend_shell:first').css('left',0).addClass('open_slide');
 
 		$('.thumbs_down').click(function(){
@@ -33,12 +34,17 @@
 
 		function check_for_next_batch(){
 			if (facebook_id_vars.length < 5){
-				$.post('/get_more_slides', function(data){
+				alert('hit')
+				$.post('/get_more_slides', {last_batch_ending_index: batch_end_index}, function(data){
 						$('.friend_window').append(data)
+						batch_end_index += 15
 					}
 				)
 			}
 		}
+
+		// var new_data = $(document).find('.indi_friend_shell').slice(2).length;
+		// alert(new_data)
 
 		function next_slide(){
 			$('.open_slide').animate({

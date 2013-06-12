@@ -1,7 +1,8 @@
 get '/play' do
 	redirect to '/' if !current_user
 	current_user.update_attributes(:sexual_pref => params[:pref]) if params[:pref]
-	@friends = get_all_friends[current_user.index_bookmark,10]
+	@friends = get_all_friends[current_user.index_bookmark,15]
+	@batch_end_index = current_user.index_bookmark + 5
 	erb :play
 end
 
@@ -31,6 +32,6 @@ post '/no_hookup' do
 end
 
 post '/get_more_slides' do 
-	@friends = get_all_friends[current_user.index_bookmark,5]
+	@friends = get_all_friends[params[:last_batch_ending_index].to_i,15]
 	erb :more_friend_slides, :layout => false
 end
