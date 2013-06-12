@@ -4,39 +4,41 @@
 		<img class="thumbs_picker thumbs_up hooked_up" src="img/thumbs_up">
 		<img class="thumbs_picker thumbs_down" src="img/thumbs_down">
 		<div class="friend_window">
+			<script type="text/javascript">
+				var facebook_id_vars = []
+			</script>
 			<% @friends.each do |friend| %>
-			<div class="indi_friend_shell" data-friend_info="{:first_name => '<%= friend.first_name %>', :last_name => '<%= friend.last_name %>', :gender => '<%= friend.gender %>', :fb_id => '<%= friend.fb_id %>'}">
-				<img class="friend_actual_image" src="<%= friend.img_url %>?width=300&height=400">
-				<h2 class="friend_name"><%= friend.first_name %></h2>
-			</div>
+				<%= erb :_friend_slide, :locals => {:friend => friend} %>
 			<% end %>
 		</div>
-		<textarea class="deets" placeholder="Deets?"></textarea>
 	</div>
 </div>
-<% @friends.each do |f| %>
-<p><%=f.first_name %></p>
-<% end %>
 <script type="text/javascript">
 	$(document).ready(function(){
 		var current_friend_slide = 0
 		$('.indi_friend_shell:first').css('left',0).addClass('open_slide');
-		$('.hooked_up').click(function(event){
-			event.preventDefault()
-			$.post('/answer', {
-				friend_info: $('.open_slide').data('friend_info')
-			 }).done(function(data){
-			 	// $('.friend_window').append(data)
-			 }).fail(function(data){
-			 	alert('failed')
-			 })
-			 next_slide()
-		})
 
 		$('.thumbs_down').click(function(){
-			$.post('/no_hookup')
+			event.preventDefault()
 			next_slide()
+			$.post('/no_hookup')
 		})
+
+		$('.thumbs_up').click(function(){
+			event.preventDefault()
+			next_slide()
+			$.post('/answer',{friend_info: facebook_id_vars.shift()})
+			check_for_next_batch()
+		})
+
+		function check_for_next_batch(){
+			if (facebook_id_vars.length < 5){
+				$.post('/get_more_slides', function(data){
+						$('.friend_window').append(data)
+					}
+				)
+			}
+		}
 
 		function next_slide(){
 			$('.open_slide').animate({

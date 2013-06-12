@@ -1,4 +1,11 @@
-<div class="indi_friend_shell" data-friend_info="{:first_name => '<%= friend.first_name %>', :last_name => '<%= friend.last_name %>', :gender => '<%= friend.gender %>', :fb_id => '<%= friend.fb_id %>'}">
+<div class="indi_friend_shell friend_slide_id_<%= friend.fb_id %>">
 	<img class="friend_actual_image" src="<%= friend.img_url %>?width=300&height=400">
-	<h2 class="friend_name"><%= friend.first_name %></h2>
+	<h2 class="friend_name"><%= friend.full_name %></h2>
+		<script type="text/javascript">
+			facebook_id_vars.push({	'first_name': '<%= friend.first_name %>',
+															'last_name': '<%= friend.last_name %>',
+															'gender': '<%= friend.gender %>',
+															'fb_id': '<%= friend.fb_id %>'
+														})
+		</script>
 </div>
