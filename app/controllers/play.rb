@@ -2,7 +2,7 @@ get '/play' do
 	redirect to '/' if !current_user
 	current_user.update_attributes(:sexual_pref => params[:pref]) if params[:pref]
 	@friends = get_all_friends[current_user.index_bookmark,15]
-	@batch_end_index = current_user.index_bookmark + 5
+	@batch_end_index = current_user.index_bookmark + 15
 	erb :play
 end
 

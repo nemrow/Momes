@@ -15,25 +15,11 @@
 </div>
 <script type="text/javascript">
 	$(document).ready(function(){
-		var current_friend_slide = 0;
 		var batch_end_index = <%= @batch_end_index %>;
-		$('.indi_friend_shell:first').css('left',0).addClass('open_slide');
-
-		$('.thumbs_down').click(function(){
-			event.preventDefault()
-			next_slide()
-			$.post('/no_hookup')
-		})
-
-		$('.thumbs_up').click(function(){
-			event.preventDefault()
-			next_slide()
-			$.post('/answer',{friend_info: facebook_id_vars.shift()})
-			check_for_next_batch()
-		})
+		var slide_in_progress = false;
 
 		function check_for_next_batch(){
-			if (facebook_id_vars.length < 5){
+			if ($('.indi_friend_shell').length == 10){
 				alert('hit')
 				$.post('/get_more_slides', {last_batch_ending_index: batch_end_index}, function(data){
 						$('.friend_window').append(data)
@@ -43,19 +29,38 @@
 			}
 		}
 
-		// var new_data = $(document).find('.indi_friend_shell').slice(2).length;
-		// alert(new_data)
-
 		function next_slide(){
+			slide_in_progress = true;
 			$('.open_slide').animate({
 				'left' : '-300px'
-			},1000, function(){
+			},700, function(){
 				$(this).remove();
-			})
-			$('.open_slide').next().addClass('open_slide').animate({
+				slide_in_progress = false;
+			}).next().addClass('open_slide').animate({
 				'left' : '0px'
-			},1000)
+			},500)
 		}
+		
+		$('.indi_friend_shell:first').css('left',0).addClass('open_slide');
+
+		$('.thumbs_down').click(function(){
+			if (slide_in_progress == false) {
+				event.preventDefault()
+				next_slide()
+				$.post('/no_hookup')
+				check_for_next_batch()
+			}
+		})
+
+		$('.thumbs_up').click(function(){
+			if (slide_in_progress == false) {
+				event.preventDefault()
+				next_slide()
+				current_friend = $('.indi_friend_shell:first').data('friend_info')
+				$.post('/answer',{friend_info: current_friend})
+				check_for_next_batch()
+			}
+		})
 
 	})
 </script>
