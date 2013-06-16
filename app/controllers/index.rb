@@ -1,12 +1,11 @@
 get '/' do
 	# session[:user_id] = nil
-  @users = User.all
-  if session[:user_id]
-		redirect to '/play' if current_user.sexual_pref
-		redirect to '/pref'
-	else
-		@fb_login_link = FBHelper.get_login_link
+	if current_user
+		@user = User.find(session[:user_id])
+	  @friends = get_all_friends
 	end
+	@fb_login_link = FBHelper.get_login_link
+  # @friends = Friend.limit(2)
 	erb :index
 end
 

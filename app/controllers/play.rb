@@ -10,6 +10,13 @@ post '/answer' do
 	if !current_user
 		redirect to '/'
 	else
+		# if the friend exists in our db
+			# create hookup
+		# else
+			# all this should be background jobs
+				# ping facebook with fb_id
+				# create Friend object
+				# create hookup 
 		friend_info = params[:friend_info]
 		p friend_info
 		friend = Friend.find_or_create_by_fb_id(:fb_id => friend_info[:fb_id].to_i,

@@ -1,2 +1,29 @@
-<div class="container">
-<h1>Welcome to Momes</h1>
+<% if current_user %>
+	<script>
+		$.backstretch("https://graph.facebook.com/<%= current_user.fb_id %>/picture?width=500");
+		$(document).ready(function(){
+			window_width = $(window).width();
+			window_height = $(window).height();
+			friend_count = <%= @friends.count %>;
+			area = window_height * window_width;
+			friend_allocated_realestate = area / friend_count;
+			friend_height = Math.sqrt(friend_allocated_realestate)
+			$(window).resize(function(){
+				window_width = $(window).width();
+				window_height = $(window).height();
+				friend_count = <%= @friends.count %>;
+				area = window_height * window_width;
+				friend_allocated_realestate = area / friend_count;
+				friend_height = Math.sqrt(friend_allocated_realestate)
+				$('.fb_img').css({'width':friend_height,
+												'height' : friend_height
+				})
+			})
+		})
+	</script>
+	<% @friends.each_with_index do |f, i| %>
+		<img class="fb_img" src="<%= f.get_facebook_user_img %>">
+	<% end %>
+
+	
+<% end %>

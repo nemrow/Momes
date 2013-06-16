@@ -9,4 +9,8 @@ class Friend < ActiveRecord::Base
 			puts "broken"
 		end
 	end
+
+	def get_facebook_user_img
+		"https://graph.facebook.com/" + fb_id.to_s + "/picture"
+	end
 end
